@@ -1,0 +1,4 @@
+DROP EXTENSION IF EXISTS curiox CASCADE;
+CREATE EXTENSION curiox;
+CREATE TABLE x(a INT) USING mem;
+select a from x;
