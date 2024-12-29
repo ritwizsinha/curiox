@@ -7,7 +7,7 @@
 #include "commands/vacuum.h"
 #include "utils/builtins.h"
 #include "executor/tuptable.h"
-#include "main.h"
+#include "engine.h"
 
 PG_MODULE_MAGIC;
 
@@ -208,14 +208,7 @@ static void memam_relation_set_new_filelocator(
   TransactionId *freezeXid,
   MultiXactId *minmulti
 ) {
-    struct Table table = {};
-    table.name = strdup(NameStr(rel->rd_rel->relname));
-    elog(WARNING, "Creating table %s", table.name);
-    table.rows = (struct Row*)malloc(sizeof(struct Row) * MAX_ROWS);
-    table.nrows = 0;
-
-    database->tables[database->ntables] = table;
-    database->ntables++;
+    elog(WARNING, "Creating storage for table with database oid: %d, relation number: %d", newrlocator->dbOid, newrlocator->relNumber, newrlocator->spcOid);
 }
 
 static void memam_relation_nontransactional_truncate(
@@ -392,5 +385,6 @@ const TableAmRoutine memam_methods = {
 PG_FUNCTION_INFO_V1(mem_tableam_handler);
 
 Datum mem_tableam_handler(PG_FUNCTION_ARGS) {
+  engine_initialize();
   PG_RETURN_POINTER(&memam_methods);
 }
