@@ -208,7 +208,7 @@ static void memam_relation_set_new_filelocator(
   TransactionId *freezeXid,
   MultiXactId *minmulti
 ) {
-    elog(WARNING, "Creating storage for table with database oid: %d, relation number: %d", newrlocator->dbOid, newrlocator->relNumber, newrlocator->spcOid);
+  engine_create_relation(newrlocator->dbOid, newrlocator->relNumber);
 }
 
 static void memam_relation_nontransactional_truncate(
@@ -385,6 +385,10 @@ const TableAmRoutine memam_methods = {
 PG_FUNCTION_INFO_V1(mem_tableam_handler);
 
 Datum mem_tableam_handler(PG_FUNCTION_ARGS) {
-  engine_initialize();
   PG_RETURN_POINTER(&memam_methods);
+}
+
+void _PG_init(void) {
+    engine_initialize();
+    elog(WARNING, "Initializing memory table access method");
 }

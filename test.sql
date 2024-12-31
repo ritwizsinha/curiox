@@ -1,3 +1,4 @@
 DROP EXTENSION IF EXISTS curiox CASCADE;
 CREATE EXTENSION curiox;
 CREATE TABLE ritwiz_sinha(a INT) USING mem;
+CREATE TABLE ritwiz_sinha(b INT) USING mem;
